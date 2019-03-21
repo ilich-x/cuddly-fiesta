@@ -1,5 +1,7 @@
 const Sell = props => (
-  <div>Sell</div>
+  <div>
+    <p>Sell</p>
+  </div>
 );
 
 export default Sell;
