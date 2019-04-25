@@ -1,5 +1,10 @@
 {
-  "extends": [
-    "wesbos"
-  ]
+  "extends": ["wesbos"],
+
+  "rules": {
+    "react/destructuring-assignment": 0,
+    "react/prop-types": 0,
+    "no-unused-expressions": 0,
+    "react/button-has-type": 0
+  }
 }
