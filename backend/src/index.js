@@ -1,8 +1,11 @@
+const coockieParser = require('cookie-parser');
 require('dotenv').config({ path: 'variables.env' });
 const createServer = require('./createServer');
 const db = require('./db');
 
 const server = createServer();
+
+server.express.use(coockieParser());
 
 server.start(
   {
