@@ -1,11 +1,21 @@
-const coockieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 require('dotenv').config({ path: 'variables.env' });
 const createServer = require('./createServer');
 const db = require('./db');
 
 const server = createServer();
 
-server.express.use(coockieParser());
+server.express.use(cookieParser());
+server.express.use((req, res, next) => {
+  const { token } = req.cookies;
+  if (token) {
+    const { userId } = jwt.decode(token, process.env.APP_SECRET);
+    // userId for future requests to access
+    req.userId = userId;
+  }
+  next();
+});
 
 server.start(
   {
