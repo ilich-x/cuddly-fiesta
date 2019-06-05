@@ -31,7 +31,7 @@ class CreateItem extends Component {
     title: 'Doggo',
     description: 'I love cats',
     image: '',
-    largeImage: 'dog_large.jpeg',
+    largeImage: '',
     price: 0,
   };
 
@@ -56,7 +56,6 @@ class CreateItem extends Component {
       }
     );
     const file = await res.json();
-    console.warn(file);
     // if (!file.error) {
     this.setState({
       image: file.secure_url,
