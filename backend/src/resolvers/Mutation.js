@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
 const JWT = require('jsonwebtoken');
+const { randomBytes } = require('crypto');
+const { promisify } = require('util');
 
 const Mutations = {
   async createItem(parent, args, ctx, info) {
@@ -76,9 +78,50 @@ const Mutations = {
     return user;
   },
   signout(parent, args, ctx, info) {
-    ctx.response.clearCookie('token');
+    ctx.response.clearCookie('token ');
 
     return { message: 'Goodbye!' };
+  },
+  async requestReset(parent, { email }, ctx, info) {
+    const user = await ctx.db.query.user({ where: { email } });
+    if (!user) {
+      throw new Error(`No such user found for email ${email}`);
+    }
+    // Set a reset token and expiry on that user
+    const randomBytesPromise = promisify(randomBytes);
+    const resetToken = (await randomBytesPromise(20)).toString('hex');
+    const resetTokenExpiry = Date.now() + 3600000; // 1 hour
+
+    await ctx.db.mutation.updateUser({
+      where: { email },
+      data: { resetToken, resetTokenExpiry },
+    });
+
+    return { message: 'Reset!' };
+  },
+  async resetPassword(parent, args, ctx, info) {
+    if (args.password !== args.confirmPassword) {
+      throw new Error('Passwords do not match');
+    }
+    // check if it's a legit reset token and check if it's expired
+    const [user] = await ctx.db.query.users({
+      where: {
+        resetToken: args.resetToken,
+        resetTokenExpiry_gte: Date.now() - 3600000,
+      },
+    });
+    if (!user) {
+      throw new Error('This token is either invalid or expired');
+    }
+
+    const password = await bcrypt.hash(args.password, 10);
+    const updatedUser = await ctx.db.mutation.updateUser({
+      where: { email: user.email },
+      data: { password, resetToken: null, resetTokenExpiry: null },
+    });
+    setTokenToCookie(user.id, ctx);
+
+    return updatedUser;
   },
 };
 
