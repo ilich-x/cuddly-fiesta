@@ -1,5 +1,6 @@
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import PropTypes from 'prop-types';
 
 import Table from './styles/Table';
 import Error from './ErrorMessage';
@@ -45,7 +46,7 @@ const Permissions = props => (
             </thead>
             <tbody>
               {data.users.map(user => (
-                <User key={user.id} user={user} />
+                <UserPermissions key={user.id} user={user} />
               ))}
             </tbody>
           </Table>
@@ -55,7 +56,33 @@ const Permissions = props => (
   </Query>
 );
 
-class User extends React.Component {
+class UserPermissions extends React.Component {
+  static propTypes = {
+    user: PropTypes.shape({
+      name: PropTypes.string,
+      email: PropTypes.string,
+      id: PropTypes.string,
+      permission: PropTypes.array,
+    }).isRequired,
+  };
+
+  state = {
+    permissions: this.props.user.permissions,
+  };
+
+  handlePermissionsChange = e => {
+    const checkbox = e.target;
+    let updatedPermissions = [...this.state.permissions];
+    if (checkbox.checked) {
+      updatedPermissions.push(checkbox.value);
+    } else {
+      updatedPermissions = updatedPermissions.filter(
+        per => per !== checkbox.value
+      );
+    }
+    this.setState({ permissions: updatedPermissions });
+  };
+
   render() {
     const { email, name, id } = this.props.user;
 
@@ -66,7 +93,12 @@ class User extends React.Component {
         {possiblePermissions.map((permission, i) => (
           <td key={`${id}-${permission}`}>
             <label htmlFor={`${id}-permission-${permission}`}>
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                checked={this.state.permissions.includes(permission)}
+                value={permission}
+                onChange={this.handlePermissionsChange}
+              />
             </label>
           </td>
         ))}
