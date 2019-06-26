@@ -184,6 +184,38 @@ const Mutations = {
       info,
     );
   },
+  async addToCart(parent, args, ctx) {
+    const { userId } = ctx.request;
+    if (!userId) {
+      throw new Error('You must be signed in');
+    }
+    // query the users current cart
+    const [existingCartItem] = await ctx.db.query.cartItems({
+      where: {
+        user: { id: userId },
+        item: { id: args.id },
+      },
+    });
+    // check if that item already in cart and increment if it is
+    if (existingCartItem) {
+      return ctx.db.mutation.updateCartItem({
+        where: { id: existingCartItem.id },
+        data: { quantity: existingCartItem.quantity + 1 },
+      });
+    }
+
+    // if is not create new one cartItem
+    return ctx.db.mutation.createCartItem({
+      data: {
+        user: {
+          connect: { id: userId },
+        },
+        item: {
+          connect: { id: args.id },
+        },
+      },
+    });
+  },
 };
 
 function setTokenToCookie(userId, ctx) {
