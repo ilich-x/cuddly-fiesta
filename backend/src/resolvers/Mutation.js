@@ -216,6 +216,28 @@ const Mutations = {
       },
     });
   },
+  async removeFromCart(parent, args, ctx, info) {
+    const cartItem = await ctx.db.query.cartItem(
+      {
+        where: {
+          id: args.id,
+        },
+      },
+      `{ id, user { id } }`,
+    );
+    if (!cartItem) throw new Error('No CartItem Found!');
+
+    if (ctx.request.userId !== cartItem.user.id) {
+      throw new Error('Nahaaaha!');
+    }
+
+    return ctx.db.mutation.deleteCartItem(
+      {
+        where: { id: args.id },
+      },
+      info,
+    );
+  },
 };
 
 function setTokenToCookie(userId, ctx) {
