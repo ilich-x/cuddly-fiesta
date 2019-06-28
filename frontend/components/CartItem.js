@@ -21,6 +21,13 @@ const CartItemStyles = styled.li`
 `;
 
 const CartItem = ({ cartItem }) => {
+  if (!cartItem.item)
+    return (
+      <CartItemStyles>
+        <p>This item is no longer available</p>
+        <RemoveFromCart id={cartItem.id} />
+      </CartItemStyles>
+    );
   const { image, title, price } = cartItem.item;
 
   return (

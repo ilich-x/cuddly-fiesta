@@ -1,5 +1,5 @@
 # source: https://eu1.prisma.sh/nazarov-ilya-30cb72/cuddly-fiesta/dev
-# timestamp: Wed Jun 26 2019 21:41:13 GMT+0300 (Moscow Standard Time)
+# timestamp: Fri Jun 28 2019 20:15:24 GMT+0300 (Moscow Standard Time)
 
 type AggregateCartItem {
   count: Int!
@@ -22,7 +22,7 @@ type CartItem implements Node {
   id: ID!
   quantity: Int!
   item: Item
-  user: User
+  user: User!
 }
 
 """A connection to a list of items."""
@@ -39,7 +39,7 @@ input CartItemCreateInput {
   id: ID
   quantity: Int
   item: ItemCreateOneInput
-  user: UserCreateOneWithoutCartInput
+  user: UserCreateOneWithoutCartInput!
 }
 
 input CartItemCreateManyWithoutUserInput {
@@ -189,7 +189,7 @@ input CartItemSubscriptionWhereInput {
 input CartItemUpdateInput {
   quantity: Int
   item: ItemUpdateOneInput
-  user: UserUpdateOneWithoutCartInput
+  user: UserUpdateOneRequiredWithoutCartInput
 }
 
 input CartItemUpdateManyDataInput {
@@ -1011,11 +1011,9 @@ input UserUpdateOneRequiredInput {
   upsert: UserUpsertNestedInput
 }
 
-input UserUpdateOneWithoutCartInput {
+input UserUpdateOneRequiredWithoutCartInput {
   create: UserCreateWithoutCartInput
   connect: UserWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
   update: UserUpdateWithoutCartDataInput
   upsert: UserUpsertWithoutCartInput
 }
