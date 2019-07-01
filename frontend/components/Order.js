@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
-import { format, formatDistance } from 'date-fns';
+import { format } from 'date-fns';
 import Head from 'next/head';
 import gql from 'graphql-tag';
 import formatMoney from '../lib/formatMoney';
@@ -30,7 +30,7 @@ const SINGLE_ORDER_QUERY = gql`
   }
 `;
 
-class Order extends Component {
+class Order extends React.Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
   };
@@ -45,6 +45,8 @@ class Order extends Component {
           if (loading) return <p>Loading...</p>;
           const { order } = data;
           console.warn(order);
+          console.warn(order.createdAt);
+          console.warn(order.createdAt);
 
           return (
             <OrderStyles>
@@ -61,8 +63,9 @@ class Order extends Component {
               </p>
               <p>
                 <span>Date</span>
-                {/* <span>{formatDistance(order.createdAt, 'MM/DD/YYYY')}</span> */}
-                <span>{order.createdAt}</span>
+                <span>
+                  {format(new Date(order.createdAt), 'd MMMM, yyyy HH:mm')}
+                </span>
               </p>
               <p>
                 <span>Order Total</span>
