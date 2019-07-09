@@ -43,11 +43,16 @@ class SingleItem extends Component {
       <Query query={SINGLE_ITEM_QUERY} variables={{ id: this.props.id }}>
         {({ error, loading, data }) => {
           if (error)
-            <p>
-              <Error error={error} />
-            </p>;
-          if (loading) <p>Loading...</p>;
-          if (!data.item) return <p>No Item Found for {this.props.id}</p>;
+            return (
+              <p>
+                <Error error={error} />
+              </p>
+            );
+          if (loading) return <p>Loading...</p>;
+          if (!data.item)
+            return (
+              <p data-test="graphql-error">No Item Found for {this.props.id}</p>
+            );
           const { item } = data;
 
           return (
@@ -69,3 +74,4 @@ class SingleItem extends Component {
 }
 
 export default SingleItem;
+export { SINGLE_ITEM_QUERY };
