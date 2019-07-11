@@ -10,7 +10,7 @@ const mocks = [
   {
     request: {
       query: REQUEST_RESET_MUTATION,
-      variables: { email: 'wesbos@gmail.com' },
+      variables: { email: 'ilay@gmail.com' },
     },
     result: {
       data: { requestReset: { message: 'success', __typename: 'Message' } },
@@ -37,7 +37,7 @@ describe('<RequestReset/>', () => {
     );
     // simulate typing an email
     wrapper.find('input').simulate('change', {
-      target: { name: 'email', value: 'wesbos@gmail.com' },
+      target: { name: 'email', value: 'ilay@gmail.com' },
     });
     // submit the form
     wrapper.find('form').simulate('submit');
