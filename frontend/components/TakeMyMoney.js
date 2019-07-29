@@ -47,6 +47,7 @@ class TakeMyMoney extends React.Component {
       <User>
         {({ data: { me }, loading }) => {
           if (loading) return null;
+          // FIXME: crash when signout with not empty cart
 
           return (
             <Mutation

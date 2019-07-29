@@ -169,6 +169,7 @@ const Mutations = {
       },
       info,
     );
+    // const currentUser = ctx.request.user; // ? TODO
     hasPermission(currentUser, ['ADMIN', 'PERMISSONUPDATE']);
 
     return ctx.db.mutation.updateUser(

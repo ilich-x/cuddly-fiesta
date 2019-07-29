@@ -43,7 +43,7 @@ class OrderList extends React.Component {
 
           return (
             <div>
-              <h2>You have {orders.lenght} orders</h2>
+              <h2>You have {orders.length} orders</h2>
               <OrderUl>
                 {orders.map(order => (
                   <OrderItemStyles key={order.id}>
@@ -56,7 +56,7 @@ class OrderList extends React.Component {
                             {order.items.reduce((a, b) => a + b.quantity, 0)}{' '}
                             Items
                           </p>
-                          <p>{order.items.lenght}</p>
+                          <p>{order.items.length}</p>
                           <p>
                             {formatDistance(
                               new Date(order.createdAt),
